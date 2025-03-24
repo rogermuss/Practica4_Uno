@@ -6,6 +6,9 @@ public class TableroUno {
     ArrayList<CartaUno> cartas = new ArrayList<>();
     //Recibe el ArrayList de cartas que posee el jugador
     public void setCartas(ArrayList<CartaUno> cartas){
+        if (this.cartas != null){
+            this.cartas.clear();
+        }
         this.cartas = new ArrayList<>(cartas.stream()
             .filter(c -> c.getIdentificador() == TABLERO)
             .collect(Collectors.toCollection(ArrayList::new)));

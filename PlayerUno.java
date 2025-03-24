@@ -14,6 +14,9 @@ public class PlayerUno {
 
     //Recibe el ArrayList de cartas que posee el jugador
     public void setCartas(ArrayList<CartaUno> cartas){
+        if (this.cartas != null){
+            this.cartas.clear();
+        }
         this.cartas = new ArrayList<>(cartas.stream()
             .filter(c -> c.getIdentificador() == getNumJugador())
             .collect(Collectors.toCollection(ArrayList::new)));
