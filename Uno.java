@@ -98,6 +98,7 @@ public class Uno {
 
     public void colocarCarta(){
         CartaUno cartaJugada = tablero.colocarJugada();
+        ultimaCartaEnJuego = new CartaUno(cartaJugada);
         if(cartaJugada != null){
             for(CartaUno carta:mazoCartas){
                 if(carta.getColor().compareTo(cartaJugada.getColor()) == 0 
@@ -176,6 +177,8 @@ public class Uno {
         uno.actualizarArreglosDeCartas();
 
         uno.cambiarTurno();
+        System.out.println(uno.getUltimaCartaEnJuego());
+        System.out.println(uno.getTurnoActual());
 
 
         //Para obtener la carta final --- igualar la ultima carta que se coloque en el metodo para colocar la carta

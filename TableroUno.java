@@ -31,6 +31,7 @@ public class TableroUno {
     }
 
     public ArrayList<String> jugadasDisponibles(){
+        boolean hayJugadas = false;
         ArrayList<String> jugadas = new ArrayList<>(); 
         ArrayList<CartaUno> mazoTemporal;
         if(firstTime){
@@ -41,7 +42,14 @@ public class TableroUno {
             return jugadas;
         }
         else{
-            
+            mazoTemporal = jugadores.get(turnoActual).getCartas();
+            for (int i = 0; i < mazoTemporal.size(); i++) {
+                if(mazoTemporal.get(i).equals(ultimaCartaEnJuego)){
+                jugadas.add(mazoTemporal.get(i).toString());
+                hayJugadas = true;
+                }
+            }
+            return jugadas;
         }
     }
 
@@ -54,14 +62,14 @@ public class TableroUno {
             do{
                 System.out.println("\tJUGADAS DISPONIBLES\n");
                 for(int i = 0; i<jugadas.size(); i++){
-                System.out.println(i+". "+jugadas.get(i)+"\n");
+                System.out.println(i+1+". "+jugadas.get(i)+"\n");
                 }
                 while (!scanner.hasNextInt()) {
                     System.out.println("Entrada inválida. Ingrese un número válido.");
                     scanner.next(); // Descarta la entrada inválida
                 }
                 opc = scanner.nextInt();
-            } while(opc >= 1 && opc <= jugadas.size());
+            } while(opc < 1 || opc > jugadas.size());
             System.out.println("Has Seleccionado: "+jugadas.get(opc - 1));
             return jugadas.get(opc - 1);
         }
