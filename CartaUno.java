@@ -5,11 +5,15 @@ public class CartaUno {
     private String color;
     private int identificador;
     private boolean isVisible;  
+    private int x;
+    private int y;
     
     //  Colores Disponibles: Amarillo, Rojo, Verde, Azul, Negro.
     public CartaUno(int valor, String color){
         this.valor = valor;
         this.color = color;
+        this.x = 0;
+        this.y = 0;
     }
 
     public CartaUno(){
@@ -22,6 +26,13 @@ public class CartaUno {
         return valor+" - "+color;
     }
 
+
+    public void setX(int x) {
+        this.x = x;
+    }
+    public void setY(int y) {
+        this.y = y;
+    }
     public void setColor(String color) {
         this.color = color;
     }
@@ -47,6 +58,13 @@ public class CartaUno {
     public int getIdentificador() {
         return identificador;
     }
+    public int getX() {
+        return x;
+    }
+    public int getY() {
+        return y;
+    }
+
 
     
 
