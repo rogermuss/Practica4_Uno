@@ -74,6 +74,10 @@ public class CartaUno {
         return y;
     }
 
+    public boolean esComodin(){
+        return color.equalsIgnoreCase("negro");
+    }
+
 
     
 

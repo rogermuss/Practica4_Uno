@@ -96,6 +96,7 @@ public class Uno {
         }
     }
 
+    //Coloca la carta y obtiene la ultima carta en juego para verificar si sigue el proceso
     public void colocarCarta(){
         CartaUno cartaJugada = tablero.colocarJugada();
         ultimaCartaEnJuego = new CartaUno(cartaJugada);
@@ -104,6 +105,7 @@ public class Uno {
                 if(carta.getColor().compareTo(cartaJugada.getColor()) == 0 
                 && carta.getValor() == cartaJugada.getValor()){
                     carta.setIdentificador(TABLERO);
+                    break;
                 }
             }
         }
@@ -160,6 +162,8 @@ public class Uno {
     }
 
     public static void main(String[] args) {
+        boolean win = false;
+        //Genero la clase de juego.
         Uno uno = new Uno(3);
         //Inicializa en un arreglo la cantidad de jugadores indicada
         uno.InicializarJugadores();
@@ -167,18 +171,24 @@ public class Uno {
         //Reparte 7 cartas a cada jugador
         uno.repartirCartas();
         //Muestra la informacion del juego
+        do{
         uno.mostrarCartasJugadores();
         uno.mostrarCartasBoneyard();
         uno.mostrarCartasTablero();
         //Envia las clases PlayerUno y BoneyardUno para trabajar con ellas en el tablero
         uno.actualizarTablero();
+        System.out.println(uno.getTurnoActual());
         //Coloca una carta basandose en el turno actual
         uno.colocarCarta();
         uno.actualizarArreglosDeCartas();
 
         uno.cambiarTurno();
         System.out.println(uno.getUltimaCartaEnJuego());
-        System.out.println(uno.getTurnoActual());
+        
+
+        //Repetir proceso y activar efectos de cartas, a su vez crear el pozo
+        //Crear condiciones para ganar el juego.
+        } while (!win);
 
 
         //Para obtener la carta final --- igualar la ultima carta que se coloque en el metodo para colocar la carta

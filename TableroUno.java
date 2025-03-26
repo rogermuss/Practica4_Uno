@@ -30,56 +30,63 @@ public class TableroUno {
         return turnoActual;
     }
 
+    //Guarda las jugadas disponibles ya sea si toca el primer turno o si toca el siguiente turno
     public ArrayList<String> jugadasDisponibles(){
-        boolean hayJugadas = false;
         ArrayList<String> jugadas = new ArrayList<>(); 
         ArrayList<CartaUno> mazoTemporal;
         if(firstTime){
-            mazoTemporal = jugadores.get(turnoActual).getCartas();
+            firstTime = false;
+            mazoTemporal = jugadores.get(turnoActual-1).getCartas();
             for (int i = 0; i < mazoTemporal.size(); i++) {
                 jugadas.add(mazoTemporal.get(i).toString());
             }
             return jugadas;
         }
         else{
-            mazoTemporal = jugadores.get(turnoActual).getCartas();
+            mazoTemporal = jugadores.get(turnoActual-1).getCartas();
+            System.out.println(mazoTemporal);
             for (int i = 0; i < mazoTemporal.size(); i++) {
-                if(mazoTemporal.get(i).equals(ultimaCartaEnJuego)){
+                if(mazoTemporal.get(i).getColor().equalsIgnoreCase(ultimaCartaEnJuego.getColor()) 
+                || mazoTemporal.get(i).getValor() == ultimaCartaEnJuego.getValor() 
+                || mazoTemporal.get(i).esComodin()){
                 jugadas.add(mazoTemporal.get(i).toString());
-                hayJugadas = true;
                 }
             }
+            System.out.println(jugadas);
             return jugadas;
         }
     }
 
-    public String seleccionCartaUno(){
+    //Le da la opcion al jugador de seleccionar sus jugadas y regresa el metodo toString de la carta.
+    public String seleccionCartaUno() {
         int opc;
-        ArrayList<String> jugadas;
         Scanner scanner = new Scanner(System.in);
-        if(!jugadasDisponibles().isEmpty()){
-            jugadas = jugadasDisponibles();
-            do{
+        ArrayList<String> jugadas = new ArrayList<>(jugadasDisponibles()); // Se llama una sola vez
+        System.out.println(jugadas);
+        if (!jugadas.isEmpty()) {
+            System.out.println(jugadas);
+            do {
                 System.out.println("\tJUGADAS DISPONIBLES\n");
-                for(int i = 0; i<jugadas.size(); i++){
-                System.out.println(i+1+". "+jugadas.get(i)+"\n");
+                for (int i = 0; i < jugadas.size(); i++) {
+                    System.out.println((i + 1) + ". " + jugadas.get(i) + "\n");
                 }
                 while (!scanner.hasNextInt()) {
                     System.out.println("Entrada inválida. Ingrese un número válido.");
-                    scanner.next(); // Descarta la entrada inválida
+                    scanner.next();
                 }
                 opc = scanner.nextInt();
-            } while(opc < 1 || opc > jugadas.size());
-            System.out.println("Has Seleccionado: "+jugadas.get(opc - 1));
+            } while (opc < 1 || opc > jugadas.size());
+    
+            System.out.println("Has Seleccionado: " + jugadas.get(opc - 1));
             return jugadas.get(opc - 1);
-        }
-        else{
+        } else {
             return "Sin jugadas disponibles";
         }
     }
+    
 
     public CartaUno obtenerCartaDeJugada(String jugada) {
-        return jugadores.get(turnoActual).getCartas().stream()
+        return jugadores.get(turnoActual-1).getCartas().stream()
             .filter(c -> jugada.equals(c.toString())) 
             .findFirst()
             .orElse(null);
@@ -90,12 +97,13 @@ public class TableroUno {
     public CartaUno colocarJugada(){
         String jugada;
         jugada = seleccionCartaUno();
+        System.out.println(jugada);
         if(jugada.compareTo("Sin jugadas disponibles") == 0){
             return null;
         }
         else{
-            ultimaCartaEnJuego = obtenerCartaDeJugada(jugada);
-
+            ultimaCartaEnJuego = new CartaUno(obtenerCartaDeJugada(jugada));
+            System.out.println(ultimaCartaEnJuego);
             return ultimaCartaEnJuego;
 
             //Espacio para colocar parte grafica
