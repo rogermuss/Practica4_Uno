@@ -5,11 +5,11 @@ public final class MazoUno {
     private String colorActual;
     private boolean recorrerPrimeraVez;
     private ArrayList<CartaUno> cartas;
-    public final int COMER2 = 10;
-    public final int SALTAR_TURNO = 11;
-    public final int INVERTIR_DIRECCION = 12;
-    public final int CAMBIAR_COLOR = 13;
-    public final int COMER4_CAMBIAR_COLOR = 14;
+    public static final int COMER2 = 10;
+    public static final int BLOQUEAR_TURNO = 11;
+    public static final int INVERTIR_DIRECCION = 12;
+    public static final int CAMBIAR_COLOR = 13;
+    public static final int COMER4_CAMBIAR_COLOR = 14;
     
 
     public MazoUno() {
@@ -23,30 +23,30 @@ public final class MazoUno {
     public void AsignarColor(int opc){
         if (recorrerPrimeraVez){
         if (opc >=0 && opc < 2){
-            colorActual = "amarillo";
+            colorActual = "Amarillo";
         }
         else if (opc >=2 && opc < 4){
-            colorActual = "azul";
+            colorActual = "Azul";
         }
         else if (opc >=4 && opc < 6){
-            colorActual = "verde";
+            colorActual = "Verde";
         }
         else{
-            colorActual = "rojo";
+            colorActual = "Rojo";
         }
         }
         else{
             if (opc == 0){
-                colorActual = "amarillo";
+                colorActual = "Amarillo";
             }
             else if (opc == 1){
-                colorActual = "azul";
+                colorActual = "Azul";
             }
             else if (opc == 2){
-                colorActual = "verde";
+                colorActual = "Verde";
             }
             else{
-                colorActual = "rojo";
+                colorActual = "Rojo";
                 recorrerPrimeraVez = true;
             }
         }

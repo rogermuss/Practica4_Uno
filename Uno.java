@@ -1,6 +1,8 @@
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Random;
+import java.util.Scanner;
 
 
 public class Uno {
@@ -77,35 +79,19 @@ public class Uno {
         boneyard.setCartas(mazoCartas);
     }
 
-    public void cambiarTurno(){
-        if(sentido){
-            if (turnoActual == players){
-                turnoActual = 1;
-            }
-            else{
-                turnoActual++;
-            }
-        }
-        else{
-            if(turnoActual == 1){
-                turnoActual = players;
-            }
-            else{
-                turnoActual--;
-            }
-        }
-    }
 
     //Coloca la carta y obtiene la ultima carta en juego para verificar si sigue el proceso
     public boolean colocarCarta(){
         CartaUno cartaJugada = new CartaUno(tablero.colocarJugada());
         System.out.println(cartaJugada);
         ultimaCartaEnJuego = new CartaUno(cartaJugada);
+        
         if(cartaJugada.getColor() != null){
             for(CartaUno carta:mazoCartas){
                 if(carta.getColor().compareTo(cartaJugada.getColor()) == 0 
-                && carta.getValor() == cartaJugada.getValor()){
+                && carta.getValor() == cartaJugada.getValor() && carta.getIdentificador() == turnoActual){
                     carta.setIdentificador(TABLERO);
+                    actualizarArreglosDeCartas();
                     break;
                 }
             }
@@ -166,7 +152,7 @@ public class Uno {
         return sentido;
     }
 
-    public void efectoCambioDeTurno(){
+    public void efectoCambioDeDireccion(){
         if(sentido){
             sentido = ANTIHORARIO;
         }
@@ -175,21 +161,110 @@ public class Uno {
         }
     }
 
-    public void efectoComerDosSiguienteTurno(){
+    public void cambiarTurno(){
+        if(sentido){
+            if (turnoActual == players){
+                turnoActual = 1;
+            }
+            else{
+                turnoActual++;
+            }
+        }
+        else{
+            if(turnoActual == 1){
+                turnoActual = players;
+            }
+            else{
+                turnoActual--;
+            }
+        }
+    }
 
+    public void efectoComerDosSiguienteTurno(){
+        cambiarTurno();
+        for(int i = 0; i<2; i++){
+            if(cartasEnBoneyard()){
+                for(CartaUno carta:mazoCartas){
+                    CartaUno cartaComida = new CartaUno(boneyard.comerCarta());
+                    if(cartaComida.toString().equalsIgnoreCase(carta.toString())){
+                        carta.setIdentificador(turnoActual);
+                        break;
+                    }
+                }
+            }
+        }
     }
 
     public void efectoBloquearTurno(){
-
+        cambiarTurno();
     }
 
     public void efectoCambiarColor(){
+        Scanner scanner = new Scanner(System.in);
+        ArrayList<String> coloresAElegir = new ArrayList<>();
+        coloresAElegir.addAll(Arrays.asList("Amarillo", "Rojo", "Verde", "Azul"));
+        int opcColor;
+        int[] indexColor = {1};
+        do {
+            coloresAElegir.forEach(c -> {
+            System.out.println(":" + indexColor[0] + ": " + c);
+            indexColor[0]++;
+            });
+            while (!scanner.hasNextInt()) {
+                System.out.println("Entrada inválida. Ingrese un número válido.");
+                scanner.next();
+            }
+            opcColor = scanner.nextInt();
+        } while (opcColor < 1 || opcColor > coloresAElegir.size());
+        ultimaCartaEnJuego.setColor(coloresAElegir.get(opcColor-1));
+        tablero.setUltimaCartaEnJuego(ultimaCartaEnJuego);
+        System.out.println(ultimaCartaEnJuego.getColor());
+    }
 
+    public boolean verificarVictoria(){
+        for(CartaUno carta:mazoCartas){
+            if(carta.getIdentificador() == turnoActual){
+                return false;
+            }
+        }
+        return true;
     }
 
     public void efectoComerCuatroCambiarColor(){
-
+        Scanner scanner = new Scanner(System.in);
+        ArrayList<String> coloresAElegir = new ArrayList<>();
+        coloresAElegir.addAll(Arrays.asList("Amarillo", "Rojo", "Verde", "Azul"));
+        int opcColor;
+        int[] indexColor = {1};
+        do {
+            coloresAElegir.forEach(c -> {
+            System.out.println(":" + indexColor[0] + ": " + c);
+            indexColor[0]++;
+            });
+            while (!scanner.hasNextInt()) {
+                System.out.println("Entrada inválida. Ingrese un número válido.");
+                scanner.next();
+            }
+            opcColor = scanner.nextInt();
+        } while (opcColor < 1 || opcColor > coloresAElegir.size());
+        ultimaCartaEnJuego.setColor(coloresAElegir.get(opcColor-1));
+        tablero.setUltimaCartaEnJuego(ultimaCartaEnJuego);
+        //Logica comer 4 y cambiar color
+        cambiarTurno();
+        for(int i = 0; i<4; i++){
+            if(cartasEnBoneyard()){
+                for(CartaUno carta:mazoCartas){
+                    CartaUno cartaComida = new CartaUno(boneyard.comerCarta());
+                    if(cartaComida.toString().equalsIgnoreCase(carta.toString())){
+                        carta.setIdentificador(turnoActual);
+                        break;
+                    }
+                }
+            }
+        }
     }
+
+    //Para terminar la parte de logica falta arreglar el removimiento de las fichas colocadas
 
     public static void main(String[] args) {
         boolean win = false;
@@ -217,11 +292,24 @@ public class Uno {
                 uno.setTurnoActual(uno.getTurnoActual()+1);
             }
         }
+        if(uno.getUltimaCartaEnJuego().getValor() == MazoUno.COMER2){
+            uno.efectoComerDosSiguienteTurno();
+        }
+        else if(uno.getUltimaCartaEnJuego().getValor() == MazoUno.BLOQUEAR_TURNO){
+            uno.efectoBloquearTurno();
+        }
+        else if(uno.getUltimaCartaEnJuego().getValor() == MazoUno.INVERTIR_DIRECCION){
+            uno.efectoCambioDeDireccion();
+        }
+        else if(uno.getUltimaCartaEnJuego().getValor() == MazoUno.CAMBIAR_COLOR){
+            uno.efectoCambiarColor();
+        }
+        else if(uno.getUltimaCartaEnJuego().getValor() == MazoUno.COMER4_CAMBIAR_COLOR){
+            uno.efectoComerCuatroCambiarColor();
+        }
         uno.actualizarArreglosDeCartas();
-
-        uno.cambiarTurno();
-        System.out.println(uno.getUltimaCartaEnJuego());
-        
+        win = uno.verificarVictoria();
+        uno.cambiarTurno();        
 
         //Repetir proceso y activar efectos de cartas, a su vez crear el pozo
         //Crear condiciones para ganar el juego.
@@ -236,3 +324,4 @@ public class Uno {
 
     }
 }
+

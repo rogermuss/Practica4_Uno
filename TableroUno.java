@@ -79,6 +79,10 @@ public class TableroUno {
             return "Sin jugadas disponibles";
         }
     }
+
+    public void setUltimaCartaEnJuego(CartaUno ultimaCartaEnJuego) {
+        this.ultimaCartaEnJuego = ultimaCartaEnJuego;
+    }
     
 
     public CartaUno obtenerCartaDeJugada(String jugada) {
