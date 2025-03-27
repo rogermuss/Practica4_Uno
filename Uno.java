@@ -83,9 +83,7 @@ public class Uno {
     //Coloca la carta y obtiene la ultima carta en juego para verificar si sigue el proceso
     public boolean colocarCarta(){
         CartaUno cartaJugada = new CartaUno(tablero.colocarJugada());
-        System.out.println(cartaJugada);
         ultimaCartaEnJuego = new CartaUno(cartaJugada);
-        
         if(cartaJugada.getColor() != null){
             for(CartaUno carta:mazoCartas){
                 if(carta.getColor().compareTo(cartaJugada.getColor()) == 0 
@@ -98,8 +96,8 @@ public class Uno {
             return true;
         }
         if(cartasEnBoneyard()){
+            CartaUno cartaComida = new CartaUno(boneyard.comerCarta());
             for(CartaUno carta:mazoCartas){
-                CartaUno cartaComida = new CartaUno(boneyard.comerCarta());
                 if(cartaComida.toString().equalsIgnoreCase(carta.toString())){
                     carta.setIdentificador(turnoActual);
                     break;
@@ -222,12 +220,15 @@ public class Uno {
     }
 
     public boolean verificarVictoria(){
-        for(CartaUno carta:mazoCartas){
-            if(carta.getIdentificador() == turnoActual){
-                return false;
+        // Recorrer la lista de jugadores
+        for(PlayerUno jugador : jugadores) {
+            if(jugador.getCartas().isEmpty()) {
+                System.out.println("¡El jugador " + jugador.getNumJugador() + " ha ganado!");
+                return true; 
             }
         }
-        return true;
+        return false; 
+        // Ningún jugador ha ganado aún
     }
 
     public void efectoComerCuatroCambiarColor(){
@@ -269,7 +270,7 @@ public class Uno {
     public static void main(String[] args) {
         boolean win = false;
         //Genero la clase de juego.
-        Uno uno = new Uno(3);
+        Uno uno = new Uno(4);
         //Inicializa en un arreglo la cantidad de jugadores indicada
         uno.InicializarJugadores();
 
