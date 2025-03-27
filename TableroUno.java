@@ -44,7 +44,6 @@ public class TableroUno {
         }
         else{
             mazoTemporal = jugadores.get(turnoActual-1).getCartas();
-            System.out.println(mazoTemporal);
             for (int i = 0; i < mazoTemporal.size(); i++) {
                 if(mazoTemporal.get(i).getColor().equalsIgnoreCase(ultimaCartaEnJuego.getColor()) 
                 || mazoTemporal.get(i).getValor() == ultimaCartaEnJuego.getValor() 
@@ -52,7 +51,6 @@ public class TableroUno {
                 jugadas.add(mazoTemporal.get(i).toString());
                 }
             }
-            System.out.println(jugadas);
             return jugadas;
         }
     }
@@ -62,9 +60,7 @@ public class TableroUno {
         int opc;
         Scanner scanner = new Scanner(System.in);
         ArrayList<String> jugadas = new ArrayList<>(jugadasDisponibles()); // Se llama una sola vez
-        System.out.println(jugadas);
         if (!jugadas.isEmpty()) {
-            System.out.println(jugadas);
             do {
                 System.out.println("\tJUGADAS DISPONIBLES\n");
                 for (int i = 0; i < jugadas.size(); i++) {
@@ -91,23 +87,16 @@ public class TableroUno {
             .findFirst()
             .orElse(null);
     }
-    
-
 
     public CartaUno colocarJugada(){
         String jugada;
         jugada = seleccionCartaUno();
-        System.out.println(jugada);
-        if(jugada.compareTo("Sin jugadas disponibles") == 0){
+        if (jugada.equalsIgnoreCase("Sin jugadas disponibles")) {
             return null;
         }
         else{
             ultimaCartaEnJuego = new CartaUno(obtenerCartaDeJugada(jugada));
-            System.out.println(ultimaCartaEnJuego);
             return ultimaCartaEnJuego;
-
-            //Espacio para colocar parte grafica
-
         }
     }
 

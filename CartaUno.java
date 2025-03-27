@@ -17,12 +17,14 @@ public class CartaUno {
     }
 
     public CartaUno(CartaUno carta){
+        if(carta!=null){
         this.valor = carta.getValor();
         this.color = carta.getColor();
         this.x = carta.getX();
         this.y = carta.getY();
         this.identificador = carta.getIdentificador();
         this.isVisible = carta.getIsVisible();
+        }
     }
 
     public CartaUno(){

@@ -97,10 +97,11 @@ public class Uno {
     }
 
     //Coloca la carta y obtiene la ultima carta en juego para verificar si sigue el proceso
-    public void colocarCarta(){
-        CartaUno cartaJugada = tablero.colocarJugada();
+    public boolean colocarCarta(){
+        CartaUno cartaJugada = new CartaUno(tablero.colocarJugada());
+        System.out.println(cartaJugada);
         ultimaCartaEnJuego = new CartaUno(cartaJugada);
-        if(cartaJugada != null){
+        if(cartaJugada.getColor() != null){
             for(CartaUno carta:mazoCartas){
                 if(carta.getColor().compareTo(cartaJugada.getColor()) == 0 
                 && carta.getValor() == cartaJugada.getValor()){
@@ -108,10 +109,29 @@ public class Uno {
                     break;
                 }
             }
+            return true;
         }
-        else{
-            //Comer boneyard hasta que consiga carta del color o del mismo numero
+        if(cartasEnBoneyard()){
+            for(CartaUno carta:mazoCartas){
+                CartaUno cartaComida = new CartaUno(boneyard.comerCarta());
+                if(cartaComida.toString().equalsIgnoreCase(carta.toString())){
+                    carta.setIdentificador(turnoActual);
+                    break;
+                }
+             }
+             return false;
         }
+        return false;
+    }
+
+    public boolean cartasEnBoneyard(){
+        int cont = 0;
+        for(CartaUno carta:mazoCartas){
+            if(carta.getIdentificador() == BONEYARD){
+            cont++;
+            }
+        }
+        return (cont != 0);
     }
 
     public void mostrarCartasJugadores(){
@@ -134,6 +154,16 @@ public class Uno {
         boneyard.setCartas(mazoCartas);
         tablero.setCartas(mazoCartas);
         jugadores.forEach(j->j.setCartas(mazoCartas));
+    }
+
+    public void setTurnoActual(int turnoActual) {
+        this.turnoActual = turnoActual;
+    }
+    public void setSentido(boolean sentido) {
+        this.sentido = sentido;
+    }
+    public boolean getSentido(){
+        return sentido;
     }
 
     public void efectoCambioDeTurno(){
@@ -177,9 +207,16 @@ public class Uno {
         uno.mostrarCartasTablero();
         //Envia las clases PlayerUno y BoneyardUno para trabajar con ellas en el tablero
         uno.actualizarTablero();
-        System.out.println(uno.getTurnoActual());
+        System.out.println("\tTurno Jugador: "+uno.getTurnoActual()+"\n");
         //Coloca una carta basandose en el turno actual
-        uno.colocarCarta();
+        boolean pudoJugar = uno.colocarCarta();
+        if(!pudoJugar){
+            if(uno.getSentido()){
+                uno.setTurnoActual(uno.getTurnoActual()-1);
+            } else{
+                uno.setTurnoActual(uno.getTurnoActual()+1);
+            }
+        }
         uno.actualizarArreglosDeCartas();
 
         uno.cambiarTurno();

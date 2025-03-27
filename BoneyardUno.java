@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 public class BoneyardUno {
@@ -16,10 +17,20 @@ public class BoneyardUno {
             .collect(Collectors.toCollection(ArrayList::new)));
     }
 
+    public CartaUno comerCarta() {
+        if (cartas.isEmpty()) {
+            System.out.println("No hay fichas en el boneyard");
+            return null; 
+        }
+        Random random = new Random();
+        int numRandom = random.nextInt(cartas.size());
+        CartaUno cartaAComer = cartas.get(numRandom); 
+        return cartaAComer; 
+    }
+
     public ArrayList<CartaUno> getCartas() {
         return cartas;
     }
-
     
 
 }
