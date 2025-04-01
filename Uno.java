@@ -3,6 +3,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
 import java.util.Scanner;
+import javax.swing.JButton;
 
 
 public class Uno {
@@ -10,6 +11,7 @@ public class Uno {
     private final int BONEYARD = 0;
     private final boolean HORARIO = true;
     private final boolean ANTIHORARIO = false;
+    private VentanaUno miVentana = new VentanaUno();
     private int players;
     private int turnoActual = 1;
     private boolean sentido = HORARIO;
@@ -265,10 +267,36 @@ public class Uno {
         }
     }
 
+    public void rellenarBoneyard(){
+        for(CartaUno carta:mazoCartas){
+            if(carta.getIdentificador() == TABLERO){
+                carta.setIdentificador(BONEYARD);
+            }
+        } 
+    }
+
+    public void agregarJugadaTurnoActualEnLaInterfaz(){
+        ArrayList<JButton> cartasTurnoActual = new ArrayList<>();
+        for (CartaUno carta:jugadores.get(turnoActual).getCartas()){
+            cartasTurnoActual.add(carta.getBoton());
+        }
+        miVentana.setBotonesCartasTurnoActual(cartasTurnoActual);
+    }
+
+    public void agregarUltimaCartaJugadaEnLaInterfaz(){
+        miVentana.setCartaEnMesa(ultimaCartaEnJuego.getBoton());
+    }
+
+    public void esperarClickParaContinuar(){
+        miVentana.esperarClick();
+    }
+
+
+
     //Para terminar la parte de logica falta arreglar el removimiento de las fichas colocadas
 
     public static void main(String[] args) {
-        boolean win = false;
+        boolean win;
         //Genero la clase de juego.
         Uno uno = new Uno(4);
         //Inicializa en un arreglo la cantidad de jugadores indicada
@@ -285,6 +313,13 @@ public class Uno {
         uno.actualizarTablero();
         System.out.println("\tTurno Jugador: "+uno.getTurnoActual()+"\n");
         //Coloca una carta basandose en el turno actual
+        if(!uno.cartasEnBoneyard()){
+            uno.rellenarBoneyard();
+        }
+        //Se agregan a la ventana creada la mano del jugador actual.
+        uno.agregarJugadaTurnoActualEnLaInterfaz();
+
+        //Control al comer
         boolean pudoJugar = uno.colocarCarta();
         if(!pudoJugar){
             if(uno.getSentido()){
@@ -292,8 +327,17 @@ public class Uno {
             } else{
                 uno.setTurnoActual(uno.getTurnoActual()+1);
             }
+        }else{
+            uno.esperarClickParaContinuar();
+            //Si se juega se agrega la carta que se coloco en la ventana.
+            uno.agregarUltimaCartaJugadaEnLaInterfaz();
         }
+
+        //Efectos de las cartas creadas.
         if(uno.getUltimaCartaEnJuego().getValor() == MazoUno.COMER2){
+            if(!uno.cartasEnBoneyard()){
+                uno.rellenarBoneyard();
+            }
             uno.efectoComerDosSiguienteTurno();
         }
         else if(uno.getUltimaCartaEnJuego().getValor() == MazoUno.BLOQUEAR_TURNO){
@@ -306,6 +350,9 @@ public class Uno {
             uno.efectoCambiarColor();
         }
         else if(uno.getUltimaCartaEnJuego().getValor() == MazoUno.COMER4_CAMBIAR_COLOR){
+            if(!uno.cartasEnBoneyard()){
+                uno.rellenarBoneyard();
+            }
             uno.efectoComerCuatroCambiarColor();
         }
         uno.actualizarArreglosDeCartas();
