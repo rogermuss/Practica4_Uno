@@ -41,7 +41,7 @@ public class VentanaUno {
         // Panel inferior (cartas del jugador)
         panelCartas = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
         panelCartas.setPreferredSize(new Dimension(500, 200));
-        panelCartas.setBackground(Color.WHITE);
+        panelCartas.setBackground(Color.LIGHT_GRAY);
         panelCartas.setOpaque(true);
         // Agregar los paneles a la ventana
         ventana.add(panelCentro, BorderLayout.CENTER);
@@ -60,7 +60,6 @@ public class VentanaUno {
     }
 
     public void setCartaEnMesa(JButton cartaEnMesa) {
-        System.out.println(cartaEnMesa);
         panelCentro.removeAll();
         
         this.cartaEnMesa = cartaEnMesa;
@@ -77,7 +76,6 @@ public class VentanaUno {
     
 
     public void setBotonesCartasTurnoActual(ArrayList<JButton> cartasTurnoActual) {
-        System.out.println(cartasTurnoActual);
         panelCartas.removeAll();
         botonesCartasTurnoActual = cartasTurnoActual;
         for (JButton carta : cartasTurnoActual) {

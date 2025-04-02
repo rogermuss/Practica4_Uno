@@ -4,12 +4,13 @@ import java.util.stream.Collectors;
 
 public class TableroUno {
     private final int TABLERO = -1;
-    BoneyardUno boneyard;
-    ArrayList<PlayerUno> jugadores = new ArrayList<>(); 
-    ArrayList<CartaUno> cartas = new ArrayList<>();
-    boolean firstTime = true;
-    int turnoActual;
-    CartaUno ultimaCartaEnJuego;
+    private BoneyardUno boneyard;
+    private ArrayList<PlayerUno> jugadores = new ArrayList<>(); 
+    private ArrayList<CartaUno> cartas = new ArrayList<>();
+    private boolean firstTime = true;
+    private int turnoActual;
+    private CartaUno ultimaCartaEnJuego;
+
 
 
     //Recibe el ArrayList de cartas que posee el jugador
@@ -29,6 +30,7 @@ public class TableroUno {
     public int getTurnoActual() {
         return turnoActual;
     }
+
 
     //Guarda las jugadas disponibles ya sea si toca el primer turno o si toca el siguiente turno
     public ArrayList<String> jugadasDisponibles(){

@@ -277,16 +277,10 @@ public class Uno {
 
     public void agregarJugadaTurnoActualEnLaInterfaz(){
         ArrayList<JButton> cartasTurnoActual = new ArrayList<>();
-        if(sentido){
-            for (CartaUno carta:jugadores.get(turnoActual-1).getCartas()){
-                cartasTurnoActual.add(carta.getBoton());
-            }
-        } else{
         for (CartaUno carta:jugadores.get(turnoActual-1).getCartas()){
-            cartasTurnoActual.add(carta.getBoton());
-        }
-        }
+                cartasTurnoActual.add(carta.getBoton());
         miVentana.setBotonesCartasTurnoActual(cartasTurnoActual);
+        }
     }
 
     public void agregarUltimaCartaJugadaEnLaInterfaz(){
@@ -314,8 +308,6 @@ public class Uno {
         uno.agregarJugadaTurnoActualEnLaInterfaz();
         do{
         uno.mostrarCartasJugadores();
-        uno.mostrarCartasBoneyard();
-        uno.mostrarCartasTablero();
         //Envia las clases PlayerUno y BoneyardUno para trabajar con ellas en el tablero
         uno.actualizarTablero();
         System.out.println("\tTurno Jugador: "+uno.getTurnoActual()+"\n");
