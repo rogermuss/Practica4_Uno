@@ -10,7 +10,7 @@ public class JuegoUno{
         ventana.setLayout(null); // Posicionamiento manual
 
         // Agregar el botón a la ventana
-        CartaUno carta = new CartaUno(12, "Azul"); // Carta UNO con valor 1 y color azul
+        CartaUno carta = new CartaUno(14, "negro"); // Carta UNO con valor 1 y color azul
         JButton botonCarta = carta.getBoton();
         botonCarta.setBounds(150, 80, 100, 150); // Posic
         ventana.add(carta.getBoton());

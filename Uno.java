@@ -277,8 +277,14 @@ public class Uno {
 
     public void agregarJugadaTurnoActualEnLaInterfaz(){
         ArrayList<JButton> cartasTurnoActual = new ArrayList<>();
-        for (CartaUno carta:jugadores.get(turnoActual).getCartas()){
+        if(sentido){
+            for (CartaUno carta:jugadores.get(turnoActual-1).getCartas()){
+                cartasTurnoActual.add(carta.getBoton());
+            }
+        } else{
+        for (CartaUno carta:jugadores.get(turnoActual-1).getCartas()){
             cartasTurnoActual.add(carta.getBoton());
+        }
         }
         miVentana.setBotonesCartasTurnoActual(cartasTurnoActual);
     }
@@ -305,6 +311,7 @@ public class Uno {
         //Reparte 7 cartas a cada jugador
         uno.repartirCartas();
         //Muestra la informacion del juego
+        uno.agregarJugadaTurnoActualEnLaInterfaz();
         do{
         uno.mostrarCartasJugadores();
         uno.mostrarCartasBoneyard();
@@ -317,7 +324,7 @@ public class Uno {
             uno.rellenarBoneyard();
         }
         //Se agregan a la ventana creada la mano del jugador actual.
-        uno.agregarJugadaTurnoActualEnLaInterfaz();
+        
 
         //Control al comer
         boolean pudoJugar = uno.colocarCarta();
@@ -328,36 +335,38 @@ public class Uno {
                 uno.setTurnoActual(uno.getTurnoActual()+1);
             }
         }else{
+            //Efectos de las cartas creadas.
+            if(uno.getUltimaCartaEnJuego().getValor() == MazoUno.COMER2){
+                if(!uno.cartasEnBoneyard()){
+                    uno.rellenarBoneyard();
+                }
+                uno.efectoComerDosSiguienteTurno();
+            }
+            else if(uno.getUltimaCartaEnJuego().getValor() == MazoUno.BLOQUEAR_TURNO){
+                uno.efectoBloquearTurno();
+            }
+            else if(uno.getUltimaCartaEnJuego().getValor() == MazoUno.INVERTIR_DIRECCION){
+                uno.efectoCambioDeDireccion();
+            }
+            else if(uno.getUltimaCartaEnJuego().getValor() == MazoUno.CAMBIAR_COLOR){
+                uno.efectoCambiarColor();
+            }
+            else if(uno.getUltimaCartaEnJuego().getValor() == MazoUno.COMER4_CAMBIAR_COLOR){
+                if(!uno.cartasEnBoneyard()){
+                    uno.rellenarBoneyard();
+                }
+                uno.efectoComerCuatroCambiarColor();
+            }
+            uno.agregarUltimaCartaJugadaEnLaInterfaz();
             uno.esperarClickParaContinuar();
             //Si se juega se agrega la carta que se coloco en la ventana.
-            uno.agregarUltimaCartaJugadaEnLaInterfaz();
         }
 
-        //Efectos de las cartas creadas.
-        if(uno.getUltimaCartaEnJuego().getValor() == MazoUno.COMER2){
-            if(!uno.cartasEnBoneyard()){
-                uno.rellenarBoneyard();
-            }
-            uno.efectoComerDosSiguienteTurno();
-        }
-        else if(uno.getUltimaCartaEnJuego().getValor() == MazoUno.BLOQUEAR_TURNO){
-            uno.efectoBloquearTurno();
-        }
-        else if(uno.getUltimaCartaEnJuego().getValor() == MazoUno.INVERTIR_DIRECCION){
-            uno.efectoCambioDeDireccion();
-        }
-        else if(uno.getUltimaCartaEnJuego().getValor() == MazoUno.CAMBIAR_COLOR){
-            uno.efectoCambiarColor();
-        }
-        else if(uno.getUltimaCartaEnJuego().getValor() == MazoUno.COMER4_CAMBIAR_COLOR){
-            if(!uno.cartasEnBoneyard()){
-                uno.rellenarBoneyard();
-            }
-            uno.efectoComerCuatroCambiarColor();
-        }
+        
         uno.actualizarArreglosDeCartas();
         win = uno.verificarVictoria();
-        uno.cambiarTurno();        
+        uno.cambiarTurno();     
+        uno.agregarJugadaTurnoActualEnLaInterfaz();   
 
         //Repetir proceso y activar efectos de cartas, a su vez crear el pozo
         //Crear condiciones para ganar el juego.

@@ -1,5 +1,6 @@
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridBagLayout;
 import java.util.ArrayList;
@@ -10,7 +11,6 @@ import javax.swing.JPanel;
 
 
 public class VentanaUno {
-
     private JFrame ventana;
     private JPanel panelCentro;
     private JPanel panelCartas;
@@ -18,55 +18,69 @@ public class VentanaUno {
     private JButton cartaEnMesa;
     private static Semaphore semaforo = new Semaphore(0); // Controla la pausa
 
-
-    public VentanaUno(){
+    public VentanaUno() {
         // Crear la ventana
         ventana = new JFrame("Uno");
-        ventana.setSize(1920, 1080); // Tamaño de la ventana
+        ventana.setSize(1920, 1080);
         ventana.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        ventana.setLayout(null); // Posicionamiento manual
+        ventana.setLayout(new BorderLayout()); // Usa BorderLayout en la ventana
 
         botonesCartasTurnoActual = new ArrayList<>();
 
+        // Botón para continuar
         JButton botonContinuar = new JButton("Continuar");
-        botonContinuar.setBounds(100, 50, 200, 50);
+        botonContinuar.addActionListener(e -> semaforo.release()); 
 
-        botonContinuar.addActionListener(e -> semaforo.release()); // Libera el juego al hacer clic
-
+        // Panel central (donde se muestra la carta en mesa)
         panelCentro = new JPanel(new GridBagLayout());
-        panelCartas = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
-        panelCartas.setBackground(Color.LIGHT_GRAY);
+        panelCentro.setPreferredSize(new Dimension(250, 380));
+        panelCentro.setBackground(Color.WHITE);
+        panelCentro.setOpaque(true);
 
-        // Solo se añaden los paneles, pero aún no hay contenido en ellos
+
+        // Panel inferior (cartas del jugador)
+        panelCartas = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
+        panelCartas.setPreferredSize(new Dimension(500, 200));
+        panelCartas.setBackground(Color.WHITE);
+        panelCartas.setOpaque(true);
+        // Agregar los paneles a la ventana
         ventana.add(panelCentro, BorderLayout.CENTER);
         ventana.add(panelCartas, BorderLayout.SOUTH);
+        ventana.add(botonContinuar, BorderLayout.NORTH);
 
-        ventana.add(botonContinuar);
         ventana.setVisible(true);
-
-
     }
 
     public static void esperarClick() {
         try {
-            semaforo.acquire(); // Bloquea la ejecución hasta que se presione el botón
+            semaforo.acquire();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }
 
-    public void setCartaEnMesa(JButton nuevaCarta) {
-        panelCentro.removeAll(); // Elimina la carta anterior
-        this.cartaEnMesa = nuevaCarta;
-        panelCentro.add(cartaEnMesa);
+    public void setCartaEnMesa(JButton cartaEnMesa) {
+        System.out.println(cartaEnMesa);
+        panelCentro.removeAll();
+        
+        this.cartaEnMesa = cartaEnMesa;
+        
+        // Asegurar que el botón ocupa todo el espacio disponible
+        this.cartaEnMesa.setPreferredSize(new Dimension(250, 380)); // Ajusta al tamaño de una carta
+        
+        panelCentro.setLayout(new GridBagLayout()); // Asegura que sigue centrado
+        
+        panelCentro.add(this.cartaEnMesa);
+        
         actualizarInterfaz();
     }
+    
 
-
-    public void setBotonesCartasTurnoActual(ArrayList<JButton> nuevasCartas) {
-        panelCartas.removeAll(); // Limpia las cartas anteriores
-        botonesCartasTurnoActual = nuevasCartas;
-        for (JButton carta : nuevasCartas) {
+    public void setBotonesCartasTurnoActual(ArrayList<JButton> cartasTurnoActual) {
+        System.out.println(cartasTurnoActual);
+        panelCartas.removeAll();
+        botonesCartasTurnoActual = cartasTurnoActual;
+        for (JButton carta : cartasTurnoActual) {
             panelCartas.add(carta);
         }
         actualizarInterfaz();
@@ -84,5 +98,4 @@ public class VentanaUno {
     public void ocultarVentana(){
         ventana.setVisible(false);
     }
-
 }
